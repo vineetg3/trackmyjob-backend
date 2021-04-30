@@ -22,11 +22,11 @@ Closed endpoints require a valid Token to be included in the header of the
 request. A Token can be acquired from the Login view above.
 
 * **Userjobs**
-`GET /api/userjobs` : Gets the list of queried userjobs. Default no query is applied. (Query is sent as json)
-`POST /api/userjob` : Adds a new job for that user
-`GET /api/userjob/<int:pk>` : Gets the specified user job (job card)
-`PUT /api/userjob/<int:pk>` : Updates the specified user job (job card)
-`DELETE /api/userjob/<int:pk>` : Deletes the specified user job (job card)
+- `GET /api/userjobs` : Gets the list of queried userjobs. Default no query is applied. (Query is sent as json)
+- `POST /api/userjob` : Adds a new job for that user
+- `GET /api/userjob/<int:pk>` : Gets the specified user job (job card)
+- `PUT /api/userjob/<int:pk>` : Updates the specified user job (job card)
+- `DELETE /api/userjob/<int:pk>` : Deletes the specified user job (job card)
 
 ---
 
@@ -42,7 +42,7 @@ These commands work on linux based systems. Other OS commands would be similar
 - Install required Python packages.
 `pip install -r requirements.txt`
 
-*** After installing ***
+**After installing**
 - Initialise the database
 `flask db init`
 - If the models are changed.The following commands must be executed each time
@@ -50,7 +50,7 @@ These commands work on linux based systems. Other OS commands would be similar
 flask db migrate
 flask db upgrade
 ```
-*** Running the server ***
+**Running the server**
 
 `flask run`
 
