@@ -20,7 +20,7 @@ def create_app():
 
 app=create_app()
 api = Api(app)
-api.add_resource(UserRegister, '/api/auth/register')
+api.add_resource(UserRegister, '/api/auth/signup')
 api.add_resource(UserLogin, '/api/auth/login')
 api.add_resource(UserLogout, '/api/auth/logout')
 api.add_resource(UserJobPost, '/api/userjob')
