@@ -2,7 +2,7 @@
 /migrations
 
 #configuration files
-./config.py
+config.py
 
 
 # Byte-compiled / optimized / DLL files
