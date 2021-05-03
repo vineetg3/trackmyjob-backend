@@ -2,6 +2,8 @@ from database import db
 from .users import UserModel
 from datetime import datetime
 from dateTimeHelper import get_current_IST_dt
+from enums.statusEnum import StatusTypes
+#https://medium.com/the-andela-way/how-to-create-django-like-choices-field-in-flask-sqlalchemy-1ca0e3a3af9d
 
 class UserJobsModel(db.Model):
     __tablename__ = "userJobs"
@@ -20,6 +22,7 @@ class UserJobsModel(db.Model):
     endDate = db.Column(db.Date)
     description = db.Column(db.String(300))
     applicationLocation = db.Column(db.String(200))
+    status=db.Column(db.String(50),nullable=False,default="Saved",server_default="Saved")
 
     def __init__(
             self,
@@ -34,6 +37,7 @@ class UserJobsModel(db.Model):
             applicationLocation=None,
             user_id=None,
             jobTitle=None,
+            status="Saved"
         ):
         self.user_id=user_id
         self.jobTitle=jobTitle
@@ -46,6 +50,7 @@ class UserJobsModel(db.Model):
         self.endDate=endDate
         self.description=description
         self.applicationLocation=applicationLocation
+        self.status=status
 
     @classmethod
     def find_by_id(cls, username):
@@ -79,4 +84,5 @@ class UserJobsModel(db.Model):
             "endDate":self.endDate.strftime('%Y/%m/%d') if self.endDate != None else None,
             "description":self.description,
             "applicationLocation":self.applicationLocation,
+            "status":self.status,
         }

@@ -5,6 +5,8 @@ from resources.user import UserRegister,UserLogin,UserLogout
 from resources.userJob import UserJobPost,UserJobList,UserJobById
 from flask_sqlalchemy import SQLAlchemy
 from database import db,migrate
+from flask_cors import CORS
+
 
 def create_app():
     
@@ -15,6 +17,7 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+    CORS(app)
     migrate.init_app(app, db)# this exposes some new flask terminal commands to us!
     return app
 
