@@ -3,6 +3,8 @@ from .users import UserModel
 from datetime import datetime
 from dateTimeHelper import get_current_IST_dt
 from enums.statusEnum import StatusTypes
+from sqlalchemy import or_
+
 #https://medium.com/the-andela-way/how-to-create-django-like-choices-field-in-flask-sqlalchemy-1ca0e3a3af9d
 
 class UserJobsModel(db.Model):
@@ -60,6 +62,43 @@ class UserJobsModel(db.Model):
     def find_by_user_id(cls,user_id):
         return cls.query.filter_by(user_id=user_id)
     
+    @classmethod
+    def run_query(cls,queryP,user_id):
+        print(queryP)
+        entitiesVisible=queryP['entitiesVisible']
+        searchTerm=queryP['searchTerm']
+        sortingEntity=queryP['sortingEntity']
+        sortingOrder = queryP['sortingOrder']
+        qr = db.session.query(cls).filter(cls.user_id==user_id,cls.status.in_(entitiesVisible))
+        #search query is only compared with db.String
+        if(len(searchTerm)!=0):
+            qr = qr.filter(or_(
+                cls.jobTitle.like(f'%{searchTerm}%'),
+                cls.company.like(f'%{searchTerm}%'),
+                cls.typeOfJob.like(f'%{searchTerm}%'),
+                cls.location.like(f'%{searchTerm}%'),
+                cls.description.like(f'%{searchTerm}%'),
+                cls.applicationLocation.like(f'%{searchTerm}%'),
+            ))
+        switcher = {
+            "Company":cls.company,
+            "Salary":cls.salary,
+            "Date of Last Application":cls.lastApplicationDate,
+            "Start-Date":cls.startDate,
+            "End-Date":cls.endDate,
+            "Last Modified":cls.lastModified,
+            "Created Date":cls.createdAt
+            }
+        if(sortingOrder=="Asc"):
+            qr = qr.order_by(switcher[sortingEntity].asc())
+        else:
+            qr = qr.order_by(switcher[sortingEntity].desc())
+        return qr
+        
+        
+
+
+    
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
@@ -69,6 +108,8 @@ class UserJobsModel(db.Model):
         db.session.commit()
     
     def json(self):
+        dateFormat="%a %b %w %Y"
+        dateTimeFormat="%c"
         return {
             "user_id":self.user_id,
             "userJob_id":self._id,
@@ -77,11 +118,11 @@ class UserJobsModel(db.Model):
             "typeOfJob":self.typeOfJob,
             "location":self.location,
             "salary":self.salary,
-            "createdAt":self.createdAt.isoformat(),
-            "lastModified":self.lastModified.isoformat(), 
-            "lastApplicationDate": self.lastApplicationDate.strftime('%Y-%m-%d') if self.lastApplicationDate!=None else None,
-            "startDate": self.startDate.strftime('%Y/%m/%d') if self.startDate!= None else None,
-            "endDate":self.endDate.strftime('%Y/%m/%d') if self.endDate != None else None,
+            "createdAt":self.createdAt.strftime(dateTimeFormat),
+            "lastModified":self.lastModified.strftime(dateTimeFormat), 
+            "lastApplicationDate": self.lastApplicationDate.strftime(dateFormat) if self.lastApplicationDate!=None else None,
+            "startDate": self.startDate.strftime(dateFormat) if self.startDate!= None else None,
+            "endDate":self.endDate.strftime(dateFormat) if self.endDate != None else None,
             "description":self.description,
             "applicationLocation":self.applicationLocation,
             "status":self.status,

@@ -1,3 +1,4 @@
+from flask import request
 from flask_restful import Resource, reqparse
 from models.userJobs import UserJobsModel
 from models.tokenBlacklist import TokenBlocklist
@@ -81,16 +82,34 @@ class UserJobById(Resource):
         user_id=get_jwt_identity()
         userjob= UserJobsModel.query.filter_by(user_id=user_id).filter_by(_id=pk).first()
         userjob.delete_from_db()
-        return printResponse({"msg":"userjob deleted","userjob_id":pk},200)
+        return printResponse({"msg":"userjob deleted","userJob_id":pk},200)
 
 class UserJobList(Resource):
     parser = reqparse.RequestParser() 
-    parser.add_argument('user_id',
+    parser.add_argument('searchTerm',
                         type=str,
                         required=False,
-                        )
+                       )
+    parser.add_argument('sortingEntity',
+                        type=str,
+                        required=False,
+                       )
+    parser.add_argument('sortingOrder',
+                        type=str,
+                        required=False,
+                       )
+    parser.add_argument('entitiesVisible',
+                        type=str,
+                        action='append', 
+                        required=False,
+                       )
+                       
     @jwt_required()
-    def get(self):
+    def post(self):
+        print(request.form.get('searchTerm')) 
+        queryP=UserJobList.parser.parse_args()
         user_id=get_jwt_identity() 
-        userJobs = UserJobsModel.query.filter_by(user_id=user_id)
+        userJobs = UserJobsModel.run_query(queryP,user_id)
+ 
+        #return {},401
         return printResponse({"userJobs":[job.json() for job in userJobs]},200)
