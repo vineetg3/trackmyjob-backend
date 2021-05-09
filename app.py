@@ -6,12 +6,13 @@ from resources.userJob import UserJobPost,UserJobList,UserJobById
 from flask_sqlalchemy import SQLAlchemy
 from database import db,migrate
 from flask_cors import CORS
+import os
 
 
 def create_app():
     
     app = Flask(__name__)
-    app.config.from_object("config.Config")
+    app.config.from_object(os.environ['APP_SETTINGS'])
     app.config['SQLALCHEMY_DATABASE_URI']=app.config['DATABASE_URI']
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
@@ -30,7 +31,9 @@ api.add_resource(UserJobPost, '/api/userjob')
 api.add_resource(UserJobById, '/api/userjob/<int:pk>')
 api.add_resource(UserJobList, '/api/userjobs')
 
-
+@app.route("/")
+def hello():
+    return "TrackMyJob - API"
 
 
 if __name__ == '__main__':
