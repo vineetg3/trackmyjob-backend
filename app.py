@@ -13,7 +13,7 @@ def create_app():
     
     app = Flask(__name__)
     app.config.from_object(os.environ['APP_SETTINGS'])
-    app.config['SQLALCHEMY_DATABASE_URI']=app.config['DATABASE_URI']
+    app.config['SQLALCHEMY_DATABASE_URI']=app.config['DATABASE_URI'].replace("://", "ql://", 1)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     bcrypt.init_app(app)
