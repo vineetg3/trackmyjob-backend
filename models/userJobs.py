@@ -23,7 +23,7 @@ class UserJobsModel(db.Model):
     endDate = db.Column(db.Date)
     description = db.Column(db.String(300))
     applicationLocation = db.Column(db.String(200))
-    status=db.Column(db.String(50),nullable=False,default="Saved",server_default="Saved")
+    status=db.Column(db.String(50),nullable=False,default="Saved")
 
     def __init__(
             self,
