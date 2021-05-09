@@ -4,7 +4,7 @@ from models.userJobs import UserJobsModel
 from models.tokenBlacklist import TokenBlocklist
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity,get_jwt
 from datetime import datetime
-from dateTimeHelper import get_current_IST_dt
+from pytz import timezone
 from .utilities import printResponse,convertToDate
 
 
@@ -38,6 +38,8 @@ class UserJobPost(Resource):
         data['startDate']=convertToDate(date=data['startDate'])
         data['endDate']=convertToDate(date=data['endDate'])
         data['lastApplicationDate']=convertToDate(date=data['lastApplicationDate'])
+        data['createdAt']=datetime.now()
+        data['lastModified']=datetime.now()
         userjob=UserJobsModel(**data)
         userjob.save_to_db()
         return printResponse({"message":"user job created","userJob":userjob.json()},201)
@@ -69,7 +71,7 @@ class UserJobById(Resource):
         user_id=get_jwt_identity()
         updatedData['user_id']=user_id
         userjob= UserJobsModel.query.filter_by(user_id=user_id).filter_by(_id=pk).first()
-        userjob.lastModified=datetime.now(timezone('UTC'))
+        userjob.lastModified=datetime.now()
         for key, value in updatedData.items():
             setattr(userjob, key, value)
         userjob.save_to_db()

@@ -11,8 +11,8 @@ class UserJobsModel(db.Model):
 
     _id = db.Column(db.Integer,primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey(UserModel._id),nullable=False)
-    createdAt=db.Column(db.DateTime, nullable=False, default=datetime.now(timezone('UTC')))
-    lastModified=db.Column(db.DateTime, nullable=False, default=datetime.now(timezone('UTC')))
+    createdAt=db.Column(db.DateTime, nullable=False)
+    lastModified=db.Column(db.DateTime, nullable=False)
     jobTitle = db.Column(db.String(100))
     company = db.Column(db.String(100))
     typeOfJob = db.Column(db.String(100))
@@ -38,6 +38,8 @@ class UserJobsModel(db.Model):
             applicationLocation=None,
             user_id=None,
             jobTitle=None,
+            createdAt=None,
+            lastModified=None,
             status="Saved"
         ):
         self.user_id=user_id
@@ -52,6 +54,8 @@ class UserJobsModel(db.Model):
         self.description=description
         self.applicationLocation=applicationLocation
         self.status=status
+        self.createdAt=createdAt
+        self.lastModified=lastModified
 
     @classmethod
     def find_by_id(cls, username):
@@ -118,8 +122,8 @@ class UserJobsModel(db.Model):
             "typeOfJob":self.typeOfJob,
             "location":self.location,
             "salary":self.salary,
-            "createdAt":self.createdAt.astimezone(timezone('Asia/Kolkata')).strftime(dateTimeFormat),
-            "lastModified":self.lastModified.astimezone(timezone('Asia/Kolkata')).strftime(dateTimeFormat), 
+            "createdAt":timezone('Asia/Kolkata').localize(self.createdAt).strftime(dateTimeFormat),
+            "lastModified":timezone('Asia/Kolkata').localize(self.lastModified).strftime(dateTimeFormat), 
             "lastApplicationDate": self.lastApplicationDate.strftime(dateFormat) if self.lastApplicationDate!=None else None,
             "startDate": self.startDate.strftime(dateFormat) if self.startDate!= None else None,
             "endDate":self.endDate.strftime(dateFormat) if self.endDate != None else None,
