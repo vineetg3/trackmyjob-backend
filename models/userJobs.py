@@ -3,16 +3,16 @@ from .users import UserModel
 from datetime import datetime
 from dateTimeHelper import get_current_IST_dt
 from sqlalchemy import or_
-
-#https://medium.com/the-andela-way/how-to-create-django-like-choices-field-in-flask-sqlalchemy-1ca0e3a3af9d
+from datetime import datetime
+from pytz import timezone
 
 class UserJobsModel(db.Model):
     __tablename__ = "userJobs"
 
     _id = db.Column(db.Integer,primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey(UserModel._id),nullable=False)
-    createdAt=db.Column(db.DateTime, nullable=False, default=get_current_IST_dt())
-    lastModified=db.Column(db.DateTime, nullable=False, default=get_current_IST_dt())
+    createdAt=db.Column(db.DateTime, nullable=False, default=datetime.now(timezone('UTC')))
+    lastModified=db.Column(db.DateTime, nullable=False, default=datetime.now(timezone('UTC')))
     jobTitle = db.Column(db.String(100))
     company = db.Column(db.String(100))
     typeOfJob = db.Column(db.String(100))
@@ -118,8 +118,8 @@ class UserJobsModel(db.Model):
             "typeOfJob":self.typeOfJob,
             "location":self.location,
             "salary":self.salary,
-            "createdAt":self.createdAt.strftime(dateTimeFormat),
-            "lastModified":self.lastModified.strftime(dateTimeFormat), 
+            "createdAt":self.createdAt.astimezone(timezone('Asia/Kolkata')).strftime(dateTimeFormat),
+            "lastModified":self.lastModified.astimezone(timezone('Asia/Kolkata')).strftime(dateTimeFormat), 
             "lastApplicationDate": self.lastApplicationDate.strftime(dateFormat) if self.lastApplicationDate!=None else None,
             "startDate": self.startDate.strftime(dateFormat) if self.startDate!= None else None,
             "endDate":self.endDate.strftime(dateFormat) if self.endDate != None else None,

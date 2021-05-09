@@ -1,7 +1,8 @@
-import datetime
+import datetime,os
 
 def printResponse(response,status=200):
-    print(response)
+    if(os.environ['APP_SETTINGS']=="config.DevelopmentConfig"):
+        print(response)
     return response,status
 
 def convertToDate(date):

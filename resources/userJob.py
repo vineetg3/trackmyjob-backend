@@ -69,7 +69,7 @@ class UserJobById(Resource):
         user_id=get_jwt_identity()
         updatedData['user_id']=user_id
         userjob= UserJobsModel.query.filter_by(user_id=user_id).filter_by(_id=pk).first()
-        userjob.lastModified=get_current_IST_dt()
+        userjob.lastModified=datetime.now(timezone('UTC'))
         for key, value in updatedData.items():
             setattr(userjob, key, value)
         userjob.save_to_db()
