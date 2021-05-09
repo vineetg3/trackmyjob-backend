@@ -5,8 +5,7 @@ from models.tokenBlacklist import TokenBlocklist
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity,get_jwt
 from datetime import datetime
 from dateTimeHelper import get_current_IST_dt
-from .utilities import printResponse
-from enums.statusEnum import StatusTypes
+from .utilities import printResponse,convertToDate
 
 
 
@@ -30,19 +29,17 @@ class UserJobPost(Resource):
     parser.add_argument('applicationLocation',required=False)
     parser.add_argument('status',required=True)
 
-    
-    def convertStringToDate(self,date):
-        y,m,d=date.split('-')
-        return datetime.date(year=int(y),month=int(m),day=int(d))
 
     @jwt_required()
     def post(self):
         data=UserJobPost.parser.parse_args()
         user_id=get_jwt_identity() 
         data['user_id']=user_id
+        data['startDate']=convertToDate(date=data['startDate'])
+        data['endDate']=convertToDate(date=data['endDate'])
+        data['lastApplicationDate']=convertToDate(date=data['lastApplicationDate'])
         userjob=UserJobsModel(**data)
         userjob.save_to_db()
-        print(type(userjob.endDate))
         return printResponse({"message":"user job created","userJob":userjob.json()},201)
 
 class UserJobById(Resource):
@@ -72,10 +69,11 @@ class UserJobById(Resource):
         user_id=get_jwt_identity()
         updatedData['user_id']=user_id
         userjob= UserJobsModel.query.filter_by(user_id=user_id).filter_by(_id=pk).first()
+        userjob.lastModified=get_current_IST_dt()
         for key, value in updatedData.items():
             setattr(userjob, key, value)
         userjob.save_to_db()
-        return printResponse(userjob.json(),200)
+        return printResponse({"message":"user job modified","userJob":userjob.json()},200)
 
     @jwt_required()
     def delete(self,pk):

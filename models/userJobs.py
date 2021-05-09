@@ -2,7 +2,6 @@ from database import db
 from .users import UserModel
 from datetime import datetime
 from dateTimeHelper import get_current_IST_dt
-from enums.statusEnum import StatusTypes
 from sqlalchemy import or_
 
 #https://medium.com/the-andela-way/how-to-create-django-like-choices-field-in-flask-sqlalchemy-1ca0e3a3af9d
@@ -87,7 +86,8 @@ class UserJobsModel(db.Model):
             "Start-Date":cls.startDate,
             "End-Date":cls.endDate,
             "Last Modified":cls.lastModified,
-            "Created Date":cls.createdAt
+            "Created Date":cls.createdAt,
+            "Job Title":cls.jobTitle
             }
         if(sortingOrder=="Asc"):
             qr = qr.order_by(switcher[sortingEntity].asc())
@@ -108,9 +108,9 @@ class UserJobsModel(db.Model):
         db.session.commit()
     
     def json(self):
-        dateFormat="%a %b %w %Y"
-        dateTimeFormat="%c"
-        return {
+        dateFormat="%a %b %d %Y" #Wed Dec 30 2020
+        dateTimeFormat="%a %b %d %Y %I:%M %p"
+        return { 
             "user_id":self.user_id,
             "userJob_id":self._id,
             "jobTitle":self.jobTitle,
