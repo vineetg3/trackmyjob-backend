@@ -3,10 +3,12 @@
 This is the backend API to TrackMyJob web application which allows users to track the status of thier jobs with an intutive web interface. All their data is stored and queried at the backend.
 Authentication is required to access thier data.
 
-This is a RESTful API made using Flask, flask-restful, sqlalchemy, jwt and Postgres.
+The backend is a RESTful API made using Flask, flask-restful, sqlalchemy, jwt and Postgres.
+
+Here is the Live project : [Here](https://trackmyjob.herokuapp.com/)
 
 ## Project Status
-This project is currently in development.
+This project is completed with the planned functionality. Will be developing more with new features.
 
 ## Open Endpoints
 
