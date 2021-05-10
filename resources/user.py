@@ -2,9 +2,7 @@ from flask_restful import Resource, reqparse
 from models.users import UserModel
 from models.tokenBlacklist import TokenBlocklist
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity,get_jwt
-from datetime import datetime
-import datetime
-from dateTimeHelper import get_current_IST_dt
+from datetime import datetime,timedelta
 from .utilities import printResponse
 
 class UserRegister(Resource):
@@ -30,7 +28,7 @@ class UserRegister(Resource):
 
         if UserModel.find_by_email(data['email']):
             return printResponse({"message": "A user with that email already exists"}, 400)
-        print(data)
+        data['created_at']=datetime.now()
         user = UserModel(**data)
         user.hash_password()
         user.save_to_db()
@@ -63,7 +61,7 @@ class UserLogin(Resource):
         if not authorized:
             return printResponse({"message": "Email or password incorrect"}, 401)
 
-        expires = datetime.timedelta(hours=2)
+        expires = timedelta(hours=2)
         access_token = create_access_token(identity=str(user._id), expires_delta=expires)
         return printResponse({
             "message": "verified",
@@ -78,7 +76,7 @@ class UserLogout(Resource):
     def post(self):
         user_id = get_jwt_identity()
         jti = get_jwt()["jti"]
-        token = TokenBlocklist(jti=jti, created_at=get_current_IST_dt())
+        token = TokenBlocklist(jti=jti, created_at=datetime.now())
         token.save_to_db()
         return printResponse({"message":"JWT revoked","user_id":user_id})
 

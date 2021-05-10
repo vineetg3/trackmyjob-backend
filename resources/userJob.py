@@ -7,9 +7,6 @@ from datetime import datetime
 from pytz import timezone
 from .utilities import printResponse,convertToDate
 
-
-
-#https://stackoverflow.com/questions/13182075/how-to-convert-a-timezone-aware-string-to-datetime-in-python-without-dateutil
 class UserJobPost(Resource):
     parser = reqparse.RequestParser() 
     parser.add_argument('user_id',required=False)
@@ -110,6 +107,4 @@ class UserJobList(Resource):
         queryP=UserJobList.parser.parse_args()
         user_id=get_jwt_identity() 
         userJobs = UserJobsModel.run_query(queryP,user_id)
- 
-        #return {},401
         return printResponse({"userJobs":[job.json() for job in userJobs]},200)

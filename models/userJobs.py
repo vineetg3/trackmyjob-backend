@@ -1,9 +1,7 @@
 from database import db
 from .users import UserModel
 from datetime import datetime
-from dateTimeHelper import get_current_IST_dt
 from sqlalchemy import or_
-from datetime import datetime
 from pytz import timezone
 
 class UserJobsModel(db.Model):

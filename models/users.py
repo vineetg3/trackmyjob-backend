@@ -1,7 +1,6 @@
 from database import db
 from security import bcrypt
 from datetime import datetime
-from dateTimeHelper import get_current_IST_dt
 
 
 class UserModel(db.Model):
@@ -11,13 +10,14 @@ class UserModel(db.Model):
     username = db.Column(db.String(80))
     email=db.Column(db.String,unique=True)
     password = db.Column(db.String(120))
-    created_at = db.Column(db.DateTime, nullable=False, default=get_current_IST_dt())
+    created_at = db.Column(db.DateTime, nullable=False)
     jobs = db.relationship('UserJobsModel',backref='UserModel',lazy='dynamic')
 
-    def __init__(self, username,email, password):
+    def __init__(self, username,email, password,created_at):
         self.username = username
         self.email=email
         self.password = password
+        self.created_at=created_at
 
     def save_to_db(self):
         db.session.add(self)
