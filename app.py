@@ -10,7 +10,6 @@ import os
 
 
 def create_app():
-    
     app = Flask(__name__)
     app.config.from_object(os.environ['APP_SETTINGS'])
     app.config['SQLALCHEMY_DATABASE_URI']=app.config['DATABASE_URI'].replace("s://", "sql://", 1)
@@ -34,7 +33,6 @@ api.add_resource(UserJobList, '/api/userjobs')
 @app.route("/")
 def hello():
     return "TrackMyJob - API"
-
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

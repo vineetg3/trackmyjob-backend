@@ -26,7 +26,6 @@ class UserJobPost(Resource):
     parser.add_argument('applicationLocation',required=False)
     parser.add_argument('status',required=True)
 
-
     @jwt_required()
     def post(self):
         data=UserJobPost.parser.parse_args()
@@ -40,6 +39,7 @@ class UserJobPost(Resource):
         userjob=UserJobsModel(**data)
         userjob.save_to_db()
         return printResponse({"message":"user job created","userJob":userjob.json()},201)
+
 
 class UserJobById(Resource):
     parser = reqparse.RequestParser() 
@@ -61,6 +61,7 @@ class UserJobById(Resource):
         user_id=get_jwt_identity() 
         userjob = UserJobsModel.query.filter_by(user_id=user_id).filter_by(_id=pk).first()
         return printResponse(userjob.json())
+
     #UPDATE FUNCTIONALITY
     @jwt_required()
     def put(self,pk):

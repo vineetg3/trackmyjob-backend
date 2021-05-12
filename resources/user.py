@@ -25,14 +25,12 @@ class UserRegister(Resource):
 
     def post(self):
         data = UserRegister.parser.parse_args()
-
         if UserModel.find_by_email(data['email']):
             return printResponse({"message": "A user with that email already exists"}, 400)
         data['created_at']=datetime.now()
         user = UserModel(**data)
         user.hash_password()
         user.save_to_db()
-
         return printResponse({"message": "User created successfully.","id":user._id}, 201)
 
 
@@ -51,17 +49,13 @@ class UserLogin(Resource):
 
     def post(self):
         data = UserLogin.parser.parse_args()
-        
         user = UserModel.find_by_email(data['email'])
-
         if user==None:
             return printResponse({"message": "User doesnt exsist"}, 400)
-        
         authorized =user.check_password(data['password'])
         if not authorized:
             return printResponse({"message": "Email or password incorrect"}, 401)
-
-        expires = timedelta(hours=2)
+        expires = timedelta(hours=12)
         access_token = create_access_token(identity=str(user._id), expires_delta=expires)
         return printResponse({
             "message": "verified",
