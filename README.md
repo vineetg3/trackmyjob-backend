@@ -6,7 +6,8 @@ Authentication is required to access thier data.
 The backend is a RESTful API made using Flask, flask-restful, sqlalchemy, jwt and Postgres.
 
 Check out the live version : [trackmyjob](https://trackmyjob.herokuapp.com/)
-Check out the frontend code  : [frontend](https://github.com/vineetg3/trackmyjob-frontend)
+
+Check out the frontend code : [frontend](https://github.com/vineetg3/trackmyjob-frontend)
 
 ## Project Status
 This project is completed with the planned functionality. Will be developing more with new features.
